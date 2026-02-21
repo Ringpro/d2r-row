@@ -1,0 +1,10 @@
+{
+  "name": "d2r-lan-party",
+  "version": "1.0.0",
+  "description": "Diablo II: Resurrected LAN party run tracker — Ladder Season 13",
+  "scripts": {
+    "start": "npx --yes serve . -p 3000",
+    "deploy": "npx --yes wrangler pages deploy . --project-name d2r-lan-party"
+  },
+  "license": "MIT"
+}
