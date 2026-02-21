@@ -105,7 +105,7 @@
     }
     .panel-title {
       font-family: 'Cinzel Decorative', serif;
-      font-size: clamp(.7rem, 1.1vw, .85rem);
+      font-size: clamp(.8rem, 1.2vw, .95rem);
       font-weight: 700;
       color: var(--gold);
       letter-spacing: 2px;
@@ -120,7 +120,7 @@
     /* ── Buttons (base) ──────────────────────────────────────── */
     button {
       font-family: 'Cinzel', serif;
-      font-size: clamp(.65rem, 1vw, .8rem);
+      font-size: clamp(.75rem, 1.1vw, .88rem);
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -145,7 +145,7 @@
     .timer-panel { align-items: center; justify-content: center; }
 
     .timer-status {
-      font-size: clamp(.65rem, 1vw, .75rem);
+      font-size: clamp(.72rem, 1.1vw, .82rem);
       letter-spacing: 3px;
       margin-bottom: 10px;
       transition: color .3s;
@@ -188,7 +188,7 @@
     .milestone-btn {
       width: 100%;
       padding: 11px 10px;
-      font-size: clamp(.7rem, 1.1vw, .85rem);
+      font-size: clamp(.8rem, 1.2vw, .95rem);
       text-align: center;
       position: relative;
     }
@@ -208,7 +208,7 @@
     .milestone-time {
       display: block;
       text-align: center;
-      font-size: clamp(.7rem, 1vw, .82rem);
+      font-size: clamp(.78rem, 1.1vw, .9rem);
       color: var(--gold);
       margin-top: 5px;
       letter-spacing: 2px;
@@ -216,7 +216,7 @@
     .milestone-split {
       display: block;
       text-align: center;
-      font-size: clamp(.6rem, .9vw, .72rem);
+      font-size: clamp(.7rem, 1vw, .82rem);
       color: var(--dim);
       letter-spacing: 1px;
       margin-top: 2px;
@@ -236,14 +236,18 @@
     /* ── Items panel ─────────────────────────────────────────── */
     .item-input-row {
       display: flex;
+      flex-direction: column;
       gap: 6px;
       margin-bottom: 10px;
       flex-shrink: 0;
     }
-    .item-input-row input {
-      flex: 1;
+    .item-input-wrap {
+      position: relative;
+    }
+    .item-input-wrap input {
+      width: 100%;
       font-family: 'Cinzel', serif;
-      font-size: clamp(.7rem, 1vw, .82rem);
+      font-size: clamp(.78rem, 1.1vw, .9rem);
       background: #0d0b07;
       border: 1px solid var(--border-bright);
       color: var(--gold);
@@ -252,11 +256,64 @@
       outline: none;
       user-select: text;
     }
-    .item-input-row input::placeholder { color: var(--dim); }
-    .item-input-row input:focus {
+    .item-input-wrap input::placeholder { color: var(--dim); }
+    .item-input-wrap input:focus {
       border-color: var(--gold-dim);
       box-shadow: 0 0 6px rgba(200,170,110,.2);
     }
+    .item-type-row {
+      display: flex;
+      gap: 6px;
+    }
+    .item-type-row button { flex: 1; }
+
+    /* ── Autocomplete dropdown ───────────────────────────────── */
+    .ac-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0; right: 0;
+      z-index: 50;
+      background: #150f08;
+      border: 1px solid var(--border-bright);
+      border-top: none;
+      border-radius: 0 0 3px 3px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .ac-dropdown.ac-open { display: block; }
+    .ac-dropdown::-webkit-scrollbar { width: 4px; }
+    .ac-dropdown::-webkit-scrollbar-track { background: #0a0804; }
+    .ac-dropdown::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+    .ac-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: clamp(.72rem, 1vw, .84rem);
+      border-bottom: 1px solid #1c1810;
+    }
+    .ac-item:last-child { border-bottom: none; }
+    .ac-item:hover, .ac-item.ac-sel { background: #1e1508; }
+    .ac-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ac-dot.unique { background: var(--unique); box-shadow: 0 0 4px var(--unique); }
+    .ac-dot.set    { background: var(--set);    box-shadow: 0 0 4px var(--set); }
+    .ac-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ac-tag {
+      font-size: .6rem;
+      padding: 1px 5px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .ac-tag.unique { color: var(--unique); border: 1px solid #883300; }
+    .ac-tag.set    { color: var(--set);    border: 1px solid #005500; }
 
     .btn-unique { border-color: #883300; color: var(--unique); }
     .btn-unique:hover { border-color: var(--unique); color: #ff8833; box-shadow: 0 0 8px rgba(255,102,0,.4); }
@@ -286,7 +343,7 @@
       padding: 5px 4px;
       border-bottom: 1px solid #1c1810;
       gap: 8px;
-      font-size: clamp(.7rem, 1vw, .82rem);
+      font-size: clamp(.78rem, 1.1vw, .9rem);
     }
     .item-entry:hover { background: #1a1208; }
 
@@ -323,7 +380,7 @@
       border-top: 1px solid var(--border);
       display: flex;
       gap: 14px;
-      font-size: clamp(.65rem, .9vw, .76rem);
+      font-size: clamp(.72rem, 1vw, .84rem);
       color: var(--gold-dim);
     }
     .items-count .c-unique { color: #cc5500; }
@@ -332,7 +389,7 @@
     .kbd-hint {
       flex-shrink: 0;
       margin-top: 4px;
-      font-size: .65rem;
+      font-size: .72rem;
       color: var(--dim);
       letter-spacing: .5px;
     }
@@ -343,7 +400,7 @@
       padding: 1px 4px;
       font-family: monospace;
       color: var(--gold-dim);
-      font-size: .65rem;
+      font-size: .72rem;
     }
 
     /* ── Confirm overlay ─────────────────────────────────────── */
@@ -448,10 +505,16 @@
     <div class="panel-title">Items Found</div>
 
     <div class="item-input-row">
-      <input id="item-input" type="text" placeholder="Item name…"
-             onkeydown="itemKeydown(event)" autocomplete="off" spellcheck="false" />
-      <button class="btn-unique" onclick="addItem('unique')" title="Add as Unique (Enter)">Unique</button>
-      <button class="btn-set"    onclick="addItem('set')"    title="Add as Set (Shift+Enter)">Set</button>
+      <div class="item-input-wrap">
+        <input id="item-input" type="text" placeholder="Item name…"
+               onkeydown="itemKeydown(event)" oninput="acOpen(this.value)"
+               autocomplete="off" spellcheck="false" />
+        <div id="ac-dropdown" class="ac-dropdown"></div>
+      </div>
+      <div class="item-type-row">
+        <button class="btn-unique" onclick="addItem('unique')" title="Add as Unique (Enter)">Unique</button>
+        <button class="btn-set"    onclick="addItem('set')"    title="Add as Set (Shift+Enter)">Set</button>
+      </div>
     </div>
 
     <div class="items-list" id="items-list">
@@ -467,6 +530,7 @@
     <div class="kbd-hint">
       <kbd>Enter</kbd> = Unique &nbsp;&nbsp;
       <kbd>Shift+Enter</kbd> = Set &nbsp;&nbsp;
+      <kbd>↑↓</kbd> = Navigate suggestions &nbsp;&nbsp;
       <kbd>Space</kbd> = Start/Stop timer
     </div>
   </section>
@@ -487,6 +551,242 @@
 
 <script>
 'use strict';
+// ── D2R Items Database ────────────────────────────────────────────────────────
+const D2R_DB = [
+  // ── Set Items ──────────────────────────────────────────────────────────────
+  // Arctic Gear
+  {n:"Arctic Furs",t:"set"},{n:"Arctic Binding",t:"set"},{n:"Arctic Horn",t:"set"},{n:"Arctic Mitts",t:"set"},
+  // Berserker's Arsenal
+  {n:"Berserker's Headgear",t:"set"},{n:"Berserker's Hauberk",t:"set"},{n:"Berserker's Hatchet",t:"set"},
+  // Cathan's Traps
+  {n:"Cathan's Rule",t:"set"},{n:"Cathan's Mesh",t:"set"},{n:"Cathan's Seal",t:"set"},{n:"Cathan's Sigil",t:"set"},{n:"Cathan's Visage",t:"set"},
+  // Civerb's Vestments
+  {n:"Civerb's Cudgel",t:"set"},{n:"Civerb's Ward",t:"set"},{n:"Civerb's Icon",t:"set"},
+  // Cleglaw's Brace
+  {n:"Cleglaw's Tooth",t:"set"},{n:"Cleglaw's Claw",t:"set"},{n:"Cleglaw's Pincers",t:"set"},
+  // Death's Disguise
+  {n:"Death's Hand",t:"set"},{n:"Death's Guard",t:"set"},{n:"Death's Touch",t:"set"},
+  // Hsarus' Defense
+  {n:"Hsarus' Iron Fist",t:"set"},{n:"Hsarus' Iron Stay",t:"set"},{n:"Hsarus' Iron Heel",t:"set"},
+  // Infernal Tools
+  {n:"Infernal Cranium",t:"set"},{n:"Infernal Torch",t:"set"},{n:"Infernal Sign",t:"set"},
+  // Iratha's Finery
+  {n:"Iratha's Coil",t:"set"},{n:"Iratha's Cord",t:"set"},{n:"Iratha's Cuff",t:"set"},{n:"Iratha's Collar",t:"set"},
+  // Isenhart's Armory
+  {n:"Isenhart's Horns",t:"set"},{n:"Isenhart's Case",t:"set"},{n:"Isenhart's Lightbrand",t:"set"},{n:"Isenhart's Parry",t:"set"},
+  // Milabrega's Regalia
+  {n:"Milabrega's Diadem",t:"set"},{n:"Milabrega's Orb",t:"set"},{n:"Milabrega's Rod",t:"set"},{n:"Milabrega's Robe",t:"set"},
+  // Sigon's Complete Steel
+  {n:"Sigon's Gage",t:"set"},{n:"Sigon's Sabot",t:"set"},{n:"Sigon's Shelter",t:"set"},{n:"Sigon's Shield",t:"set"},{n:"Sigon's Steel",t:"set"},
+  // Tancred's Battlegear
+  {n:"Tancred's Crowbill",t:"set"},{n:"Tancred's Spine",t:"set"},{n:"Tancred's Hobnails",t:"set"},{n:"Tancred's Skull",t:"set"},{n:"Tancred's Weird",t:"set"},
+  // Vidala's Rig
+  {n:"Vidala's Barb",t:"set"},{n:"Vidala's Ambush",t:"set"},{n:"Vidala's Fetlock",t:"set"},{n:"Vidala's Snare",t:"set"},
+  // Angelic Raiment
+  {n:"Angelic Sickle",t:"set"},{n:"Angelic Mantle",t:"set"},{n:"Angelic Wings",t:"set"},{n:"Angelic Halo",t:"set"},
+  // Cow King's Leathers
+  {n:"Cow King's Horns",t:"set"},{n:"Cow King's Hide",t:"set"},{n:"Cow King's Hooves",t:"set"},
+  // Sander's Folly
+  {n:"Sander's Paragon",t:"set"},{n:"Sander's Riprap",t:"set"},{n:"Sander's Taboo",t:"set"},{n:"Sander's Superstition",t:"set"},
+  // Aldur's Watchtower
+  {n:"Aldur's Stony Gaze",t:"set"},{n:"Aldur's Deception",t:"set"},{n:"Aldur's Rhythm",t:"set"},{n:"Aldur's Advance",t:"set"},
+  // Bul-Kathos' Children
+  {n:"Bul-Kathos' Sacred Charge",t:"set"},{n:"Bul-Kathos' Tribal Guardian",t:"set"},
+  // The Disciple
+  {n:"Laying of Hands",t:"set"},{n:"Telling of Beads",t:"set"},{n:"Rite of Passage",t:"set"},{n:"Dark Adherent",t:"set"},{n:"Credendum",t:"set"},
+  // Griswold's Legacy
+  {n:"Griswold's Caduceus",t:"set"},{n:"Griswold's Redemption",t:"set"},{n:"Griswold's Heart",t:"set"},{n:"Griswold's Valor",t:"set"},
+  // Heaven's Brethren
+  {n:"Haemosu's Adamant",t:"set"},{n:"Haemosu's Glaive",t:"set"},{n:"Ondal's Almighty",t:"set"},{n:"Taebaek's Glory",t:"set"},
+  // Hwanin's Majesty
+  {n:"Hwanin's Justice",t:"set"},{n:"Hwanin's Refuge",t:"set"},{n:"Hwanin's Splendor",t:"set"},{n:"Hwanin's Blessing",t:"set"},
+  // Immortal King
+  {n:"Immortal King's Will",t:"set"},{n:"Immortal King's Soul Cage",t:"set"},{n:"Immortal King's Detail",t:"set"},
+  {n:"Immortal King's Forge",t:"set"},{n:"Immortal King's Pillar",t:"set"},{n:"Immortal King's Stone Crusher",t:"set"},
+  // M'avina's Battle Hymn
+  {n:"M'avina's True Sight",t:"set"},{n:"M'avina's Embrace",t:"set"},{n:"M'avina's Tenet",t:"set"},{n:"M'avina's Caster",t:"set"},{n:"M'avina's Icy Clutch",t:"set"},
+  // Natalya's Odium
+  {n:"Natalya's Totem",t:"set"},{n:"Natalya's Shadow",t:"set"},{n:"Natalya's Soul",t:"set"},{n:"Natalya's Mark",t:"set"},
+  // Orphan's Call
+  {n:"Guillaume's Face",t:"set"},{n:"Wilhelm's Pride",t:"set"},{n:"Whitstan's Guard",t:"set"},{n:"Magnus' Skin",t:"set"},
+  // Sazabi's Grand Tribute
+  {n:"Sazabi's Mental Sheath",t:"set"},{n:"Sazabi's Cobalt Redeemer",t:"set"},{n:"Sazabi's Ghost Liberator",t:"set"},
+  // Tal Rasha's Wrappings
+  {n:"Tal Rasha's Horadric Crest",t:"set"},{n:"Tal Rasha's Guardianship",t:"set"},{n:"Tal Rasha's Lidless Eye",t:"set"},
+  {n:"Tal Rasha's Fine-Spun Cloth",t:"set"},{n:"Tal Rasha's Adjudication",t:"set"},
+  // Trang-Oul's Avatar
+  {n:"Trang-Oul's Guise",t:"set"},{n:"Trang-Oul's Scales",t:"set"},{n:"Trang-Oul's Wing",t:"set"},{n:"Trang-Oul's Girth",t:"set"},{n:"Trang-Oul's Claws",t:"set"},
+
+  // ── Unique Items ───────────────────────────────────────────────────────────
+  // Unique Axes
+  {n:"The Gnasher",t:"unique"},{n:"Deathspade",t:"unique"},{n:"Bladebone",t:"unique"},{n:"Skull Splitter",t:"unique"},
+  {n:"Rakescar",t:"unique"},{n:"Axe of Fechmar",t:"unique"},{n:"Goreshovel",t:"unique"},{n:"The Chieftain",t:"unique"},
+  {n:"Brainhew",t:"unique"},{n:"Humongous",t:"unique"},
+  {n:"Coldkill",t:"unique"},{n:"Butcher's Pupil",t:"unique"},{n:"Islestrike",t:"unique"},{n:"Pompe's Wrath",t:"unique"},
+  {n:"Guardian Naga",t:"unique"},{n:"Warlord's Trust",t:"unique"},{n:"Spellsteel",t:"unique"},{n:"Stormrider",t:"unique"},
+  {n:"Boneslayer Blade",t:"unique"},{n:"The Minotaur",t:"unique"},
+  {n:"Ethereal Edge",t:"unique"},{n:"Demon Limb",t:"unique"},{n:"Messerschmidt's Reaver",t:"unique"},
+  // Unique Swords
+  {n:"Rixot's Keen",t:"unique"},{n:"Blood Crescent",t:"unique"},{n:"Skewer of Krintiz",t:"unique"},{n:"Gleamscythe",t:"unique"},
+  {n:"Griswold's Edge",t:"unique"},{n:"Hellplague",t:"unique"},{n:"Culwen's Point",t:"unique"},{n:"Shadowfang",t:"unique"},
+  {n:"Soulfeast Tine",t:"unique"},{n:"Hone Sundan",t:"unique"},{n:"Spire of Lazarus",t:"unique"},{n:"The Impaler",t:"unique"},
+  {n:"Ginther's Rift",t:"unique"},{n:"Headstriker",t:"unique"},{n:"Plague Bearer",t:"unique"},{n:"The Atlantean",t:"unique"},
+  {n:"Crainte Vomir",t:"unique"},{n:"Bing Sz Wang",t:"unique"},{n:"The Vile Husk",t:"unique"},
+  {n:"Cloudcrack",t:"unique"},{n:"Todesfaelle Flamme",t:"unique"},{n:"Swordguard",t:"unique"},
+  {n:"Ripsaw",t:"unique"},{n:"The Patriarch",t:"unique"},
+  {n:"Lightsabre",t:"unique"},{n:"Azurewrath",t:"unique"},{n:"Flamebellow",t:"unique"},
+  {n:"Doombringer",t:"unique"},{n:"The Grandfather",t:"unique"},{n:"Wizardspike",t:"unique"},
+  {n:"Fleshripper",t:"unique"},{n:"Wolfhowl",t:"unique"},
+  // Unique Blunt
+  {n:"Felloak",t:"unique"},{n:"Knell Striker",t:"unique"},{n:"Stoutnail",t:"unique"},{n:"Crushflange",t:"unique"},
+  {n:"Bloodrise",t:"unique"},{n:"The General's Tan Do Li Ga",t:"unique"},{n:"Ironstone",t:"unique"},
+  {n:"Bonesnap",t:"unique"},{n:"Steeldriver",t:"unique"},
+  {n:"Dark Clan Crusher",t:"unique"},{n:"Zakarum's Hand",t:"unique"},{n:"The Fetid Sprinkler",t:"unique"},
+  {n:"Hand of Blessed Light",t:"unique"},{n:"Fleshrender",t:"unique"},
+  {n:"Sucher's Damsel",t:"unique"},{n:"Schaefer's Hammer",t:"unique"},{n:"Horizon's Tornado",t:"unique"},
+  {n:"Stormlash",t:"unique"},{n:"Earth Shifter",t:"unique"},{n:"The Cranium Basher",t:"unique"},
+  // Unique Wands / Scepters
+  {n:"Torch of Iro",t:"unique"},{n:"Maelstrom",t:"unique"},{n:"Gravenspine",t:"unique"},{n:"Ume's Lament",t:"unique"},
+  {n:"Suicide Branch",t:"unique"},{n:"Carin Shard",t:"unique"},{n:"Arm of King Leoric",t:"unique"},
+  {n:"Blackhand Key",t:"unique"},{n:"Death's Web",t:"unique"},
+  {n:"Scepter of Zakarum",t:"unique"},{n:"Spire of the Heavens",t:"unique"},
+  {n:"Heaven's Light",t:"unique"},{n:"The Redeemer",t:"unique"},{n:"Astreon's Iron Ward",t:"unique"},
+  // Unique Spears / Polearms
+  {n:"Kelpie Snare",t:"unique"},{n:"Sureshrill Frost",t:"unique"},{n:"Moonfall",t:"unique"},
+  {n:"Baezil's Vortex",t:"unique"},{n:"Darkforce Spawn",t:"unique"},
+  {n:"The Meat Scraper",t:"unique"},{n:"Blackleach Blade",t:"unique"},
+  {n:"Athena's Wrath",t:"unique"},{n:"Pierre Tombale Couant",t:"unique"},{n:"Husoldal Evo",t:"unique"},
+  {n:"Grim's Burning Dead",t:"unique"},{n:"The Reaper's Toll",t:"unique"},{n:"Tomb Reaver",t:"unique"},
+  {n:"Bonehew",t:"unique"},
+  // Unique Staves
+  {n:"Chromatic Ire",t:"unique"},{n:"Warpspear",t:"unique"},{n:"Skullcollector",t:"unique"},
+  {n:"Ribcracker",t:"unique"},
+  {n:"The Iron Jang Bong",t:"unique"},{n:"Razorswitch",t:"unique"},{n:"Soulflay",t:"unique"},
+  {n:"Ondal's Wisdom",t:"unique"},
+  // Unique Bows / Crossbows
+  {n:"Skystrike",t:"unique"},{n:"Raven Claw",t:"unique"},{n:"Raven Wing",t:"unique"},{n:"Magewrath",t:"unique"},
+  {n:"Goldstrike Arch",t:"unique"},{n:"Eaglehorn",t:"unique"},{n:"Widowmaker",t:"unique"},
+  {n:"Buriza-Do Kyanon",t:"unique"},{n:"Demon Machine",t:"unique"},{n:"Hellrack",t:"unique"},
+  {n:"Gut Siphon",t:"unique"},{n:"Doomslinger",t:"unique"},{n:"Blood Raven's Charge",t:"unique"},
+  // Unique Claws (Assassin)
+  {n:"Bartuc's Cut-Throat",t:"unique"},{n:"Jade Talon",t:"unique"},{n:"Shadow Killer",t:"unique"},
+  {n:"Firelizard's Talons",t:"unique"},{n:"Fury's Pelt",t:"unique"},
+  {n:"Arioc's Needle",t:"unique"},
+  // Unique Orbs (Sorceress)
+  {n:"The Oculus",t:"unique"},{n:"Eschuta's Temper",t:"unique"},{n:"Fathom",t:"unique"},
+  {n:"Death's Fathom",t:"unique"},
+  // Misc Weapons
+  {n:"Wirt's Leg",t:"unique"},{n:"Gull",t:"unique"},{n:"The Jade Tan Do",t:"unique"},
+  // Unique Helms
+  {n:"Biggin's Bonnet",t:"unique"},{n:"Tarnhelm",t:"unique"},{n:"Coif of Glory",t:"unique"},
+  {n:"Duskdeep",t:"unique"},{n:"Wormskull",t:"unique"},{n:"Howltusk",t:"unique"},
+  {n:"Undead Crown",t:"unique"},{n:"The Face of Horror",t:"unique"},
+  {n:"Rockstopper",t:"unique"},{n:"Stealskull",t:"unique"},{n:"Darksight Helm",t:"unique"},
+  {n:"Valkyrie Wing",t:"unique"},{n:"Crown of Thieves",t:"unique"},
+  {n:"Harlequin Crest",t:"unique"},{n:"Vampire Gaze",t:"unique"},{n:"Andariel's Visage",t:"unique"},
+  {n:"Griffon's Eye",t:"unique"},{n:"Crown of Ages",t:"unique"},
+  {n:"Jalal's Mane",t:"unique"},{n:"Giant Skull",t:"unique"},{n:"Nightwing's Veil",t:"unique"},
+  {n:"Veil of Steel",t:"unique"},{n:"Kira's Guardian",t:"unique"},
+  // Unique Armor
+  {n:"Greyform",t:"unique"},{n:"Blinkbat's Form",t:"unique"},{n:"The Centurion",t:"unique"},
+  {n:"Twitchthroe",t:"unique"},{n:"Darkglow",t:"unique"},{n:"Hawkmail",t:"unique"},
+  {n:"Venom Ward",t:"unique"},{n:"Iceblink",t:"unique"},{n:"Boneflesh",t:"unique"},
+  {n:"Rockfleece",t:"unique"},{n:"Rattlecage",t:"unique"},{n:"Goldskin",t:"unique"},
+  {n:"Silks of the Victor",t:"unique"},
+  {n:"The Spirit Shroud",t:"unique"},{n:"Skin of the Flayed One",t:"unique"},
+  {n:"Iron Pelt",t:"unique"},{n:"Crow Caw",t:"unique"},{n:"Shaftstop",t:"unique"},
+  {n:"Duriel's Shell",t:"unique"},{n:"Skullder's Ire",t:"unique"},
+  {n:"Que-Hegan's Wisdom",t:"unique"},{n:"Skin of the Vipermagi",t:"unique"},
+  {n:"Ormus' Robes",t:"unique"},{n:"Arkaine's Valor",t:"unique"},{n:"The Gladiator's Bane",t:"unique"},
+  {n:"Atma's Wail",t:"unique"},{n:"Black Hades",t:"unique"},{n:"Corpsemourn",t:"unique"},
+  // Unique Shields
+  {n:"Pelta Lunata",t:"unique"},{n:"Umbral Disk",t:"unique"},{n:"Stormguild",t:"unique"},
+  {n:"Swordback Hold",t:"unique"},{n:"Steelclash",t:"unique"},{n:"Bverrit Keep",t:"unique"},
+  {n:"The Ward",t:"unique"},
+  {n:"Moser's Blessed Circle",t:"unique"},{n:"Stormchaser",t:"unique"},{n:"Lidless Wall",t:"unique"},
+  {n:"Blackoak Shield",t:"unique"},{n:"Visceratuant",t:"unique"},{n:"Gerke's Sanctuary",t:"unique"},
+  {n:"Radament's Sphere",t:"unique"},{n:"Wall of the Eyeless",t:"unique"},
+  {n:"Herald of Zakarum",t:"unique"},{n:"Alma Negra",t:"unique"},{n:"Spike Thorn",t:"unique"},
+  {n:"Homunculus",t:"unique"},{n:"Head Hunter's Glory",t:"unique"},
+  // Unique Gloves
+  {n:"The Hand of Broc",t:"unique"},{n:"Bloodfist",t:"unique"},{n:"Chance Guards",t:"unique"},
+  {n:"Magefist",t:"unique"},{n:"Frostburn",t:"unique"},
+  {n:"Venom Grip",t:"unique"},{n:"Gravepalm",t:"unique"},{n:"Ghoulhide",t:"unique"},
+  {n:"Lava Gout",t:"unique"},{n:"Hellmouth",t:"unique"},
+  {n:"Dracul's Grasp",t:"unique"},{n:"Soul Drainer",t:"unique"},{n:"Steelrend",t:"unique"},
+  // Unique Belts
+  {n:"Lenymo",t:"unique"},{n:"Snakecord",t:"unique"},{n:"Goldwrap",t:"unique"},{n:"Bladebuckle",t:"unique"},
+  {n:"Nightsmoke",t:"unique"},{n:"Gloom's Trap",t:"unique"},{n:"Snowclash",t:"unique"},
+  {n:"String of Ears",t:"unique"},{n:"Razortail",t:"unique"},{n:"Nosferatu's Coil",t:"unique"},
+  {n:"Thundergod's Vigor",t:"unique"},{n:"Verdungo's Hearty Cord",t:"unique"},
+  {n:"Arachnid Mesh",t:"unique"},
+  // Unique Boots
+  {n:"Hotspur",t:"unique"},{n:"Gorefoot",t:"unique"},{n:"Treads of Cthon",t:"unique"},
+  {n:"Goblin Toe",t:"unique"},{n:"Tearhaunch",t:"unique"},
+  {n:"Infernostride",t:"unique"},{n:"Waterwalk",t:"unique"},{n:"Silkweave",t:"unique"},
+  {n:"War Traveler",t:"unique"},{n:"Gore Rider",t:"unique"},
+  {n:"Sandstorm Trek",t:"unique"},{n:"Shadow Dancer",t:"unique"},
+  // Unique Rings
+  {n:"Nagelring",t:"unique"},{n:"Manald Heal",t:"unique"},{n:"The Stone of Jordan",t:"unique"},
+  {n:"Dwarf Star",t:"unique"},{n:"Raven Frost",t:"unique"},{n:"Bul-Kathos' Wedding Band",t:"unique"},
+  {n:"Carrion Wind",t:"unique"},{n:"Nature's Peace",t:"unique"},{n:"Wisp Projector",t:"unique"},
+  // Unique Amulets
+  {n:"Nokozan Relic",t:"unique"},{n:"The Eye of Etlich",t:"unique"},{n:"The Mahim-Oak Curio",t:"unique"},
+  {n:"Saracen's Chance",t:"unique"},{n:"The Rising Sun",t:"unique"},{n:"Crescent Moon",t:"unique"},
+  {n:"Atma's Scarab",t:"unique"},{n:"Highlord's Wrath",t:"unique"},{n:"Mara's Kaleidoscope",t:"unique"},
+  {n:"Metalgrid",t:"unique"},{n:"Seraph's Hymn",t:"unique"},{n:"Vogelei",t:"unique"},
+];
+
+// ── Autocomplete state ────────────────────────────────────────────────────────
+let acItems  = [];  // current filtered results
+let acIndex  = -1;  // keyboard-highlighted index (-1 = none)
+
+function acFilter(query) {
+  if (!query) return [];
+  const q = query.toLowerCase();
+  return D2R_DB.filter(it => it.n.toLowerCase().includes(q)).slice(0, 10);
+}
+
+function acRender() {
+  const dd = document.getElementById('ac-dropdown');
+  if (acItems.length === 0) { dd.innerHTML = ''; dd.classList.remove('ac-open'); return; }
+  dd.classList.add('ac-open');
+  dd.innerHTML = acItems.map((it, i) => `
+    <div class="ac-item${i === acIndex ? ' ac-sel' : ''}" data-idx="${i}"
+         onmousedown="acSelect(${i})">
+      <span class="ac-dot ${esc(it.t)}"></span>
+      <span class="ac-name">${esc(it.n)}</span>
+      <span class="ac-tag ${esc(it.t)}">${it.t === 'unique' ? 'U' : 'S'}</span>
+    </div>`).join('');
+  // scroll selected item into view
+  if (acIndex >= 0) {
+    const sel = dd.querySelector('.ac-sel');
+    if (sel) sel.scrollIntoView({ block: 'nearest' });
+  }
+}
+
+function acOpen(query) {
+  acItems = acFilter(query.trim());
+  acIndex = -1;
+  acRender();
+}
+
+function acClose() {
+  acItems = []; acIndex = -1;
+  const dd = document.getElementById('ac-dropdown');
+  dd.innerHTML = '';
+  dd.classList.remove('ac-open');
+}
+
+function acSelect(i) {
+  const it = acItems[i];
+  if (!it) return;
+  const inp = document.getElementById('item-input');
+  inp.value = it.n;
+  acClose();
+  addItem(it.t);
+}
+
 // ── Constants ────────────────────────────────────────────────────────────────
 const STORAGE_KEY = 'd2r_lan_v1';
 const MILESTONES  = ['normal', 'nightmare', 'hell'];
@@ -606,13 +906,26 @@ function toggleMilestone(name) {
 let lastType = 'unique';
 
 function itemKeydown(e) {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (acItems.length > 0) { acIndex = Math.min(acIndex + 1, acItems.length - 1); acRender(); }
+    return;
+  }
+  if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (acItems.length > 0) { acIndex = Math.max(acIndex - 1, -1); acRender(); }
+    return;
+  }
+  if (e.key === 'Escape') { acClose(); return; }
   if (e.key === 'Enter') {
     e.preventDefault();
-    addItem(e.shiftKey ? 'set' : 'unique');
+    if (acIndex >= 0 && acIndex < acItems.length) { acSelect(acIndex); }
+    else { addItem(e.shiftKey ? 'set' : 'unique'); }
   }
 }
 
 function addItem(type) {
+  acClose();
   lastType = type;
   const inp = document.getElementById('item-input');
   const name = inp.value.trim();
@@ -712,6 +1025,10 @@ document.addEventListener('keydown', e => {
     state.isRunning ? stopTimer() : startTimer();
   }
   if (e.key === 'Escape') hideOverlay();
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.item-input-wrap')) acClose();
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
