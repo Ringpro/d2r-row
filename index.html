@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D2R LAN Party — Ladder Season 13</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & root variables ─────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:          #c8aa6e;
+      --gold-bright:   #f5d588;
+      --gold-dim:      #7a6540;
+      --bg:            #0a0804;
+      --panel-bg:      #110e08;
+      --border:        #3d2e16;
+      --border-bright: #6b5228;
+      --unique:        #ff6600;
+      --set:           #00aa00;
+      --red:           #cc0000;
+      --dim:           #5a5040;
+    }
+
+    /* ── Body ───────────────────────────────────────────────── */
+    body {
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% 0%, #1a100200 0%, transparent 70%),
+        repeating-linear-gradient(
+          0deg, transparent, transparent 3px,
+          rgba(255,255,255,0.01) 3px, rgba(255,255,255,0.01) 4px
+        );
+      color: var(--gold);
+      font-family: 'Cinzel', 'Palatino Linotype', Palatino, serif;
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    header {
+      text-align: center;
+      padding: 6px 20px;
+      background: linear-gradient(to bottom, #1c1408, #110e08);
+      border-bottom: 2px solid var(--border);
+      flex-shrink: 0;
+      position: relative;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--border-bright), transparent);
+    }
+    header h1 {
+      font-family: 'Cinzel Decorative', 'Palatino Linotype', serif;
+      font-size: clamp(1rem, 2.2vw, 1.6rem);
+      font-weight: 900;
+      color: var(--gold-bright);
+      letter-spacing: 4px;
+      text-shadow: 0 0 24px rgba(245,213,136,.45), 0 2px 4px #000;
+    }
+    header p {
+      font-size: clamp(.65rem, 1.1vw, .8rem);
+      color: var(--gold-dim);
+      letter-spacing: 3px;
+      margin-top: 2px;
+    }
+
+    /* ── Main grid ───────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: 260px 1fr 340px;
+      gap: 10px;
+      padding: 10px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ── Panel ───────────────────────────────────────────────── */
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+    .panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 1px 0 rgba(107,82,40,.4), inset 0 -1px 0 rgba(0,0,0,.6);
+      pointer-events: none;
+    }
+    .panel-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(.7rem, 1.1vw, .85rem);
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-align: center;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    /* ── Buttons (base) ──────────────────────────────────────── */
+    button {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(.65rem, 1vw, .8rem);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1px solid var(--border-bright);
+      background: linear-gradient(to bottom, #2a1e0e, #1a1208);
+      color: var(--gold);
+      padding: 8px 14px;
+      border-radius: 2px;
+      transition: all .12s;
+      white-space: nowrap;
+    }
+    button:hover {
+      background: linear-gradient(to bottom, #3d2e14, #28200e);
+      color: var(--gold-bright);
+      border-color: var(--gold-dim);
+      box-shadow: 0 0 8px rgba(200,170,110,.3);
+    }
+    button:active { filter: brightness(.85); }
+
+    /* ── Timer panel ─────────────────────────────────────────── */
+    .timer-panel { align-items: center; justify-content: center; }
+
+    .timer-status {
+      font-size: clamp(.65rem, 1vw, .75rem);
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+      transition: color .3s;
+    }
+    .timer-status.running { color: #5a9e3c; }
+    .timer-status.stopped { color: #9e3c3c; }
+
+    .timer-display {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 900;
+      color: var(--gold-bright);
+      letter-spacing: 6px;
+      text-shadow:
+        0 0 30px rgba(245,213,136,.55),
+        0 0 60px rgba(200,170,110,.25),
+        0 2px 8px #000;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 28px;
+      transition: text-shadow .5s;
+    }
+    .timer-display.running {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { text-shadow: 0 0 30px rgba(245,213,136,.55), 0 0 60px rgba(200,170,110,.25), 0 2px 8px #000; }
+      50%      { text-shadow: 0 0 50px rgba(245,213,136,.75), 0 0 90px rgba(200,170,110,.4),  0 2px 8px #000; }
+    }
+
+    .timer-controls { display: flex; gap: 10px; }
+    .btn-start { border-color: #2d5a1e; color: #5a9e3c; }
+    .btn-start:hover { border-color: #5a9e3c; color: #7fc45a; box-shadow: 0 0 10px rgba(90,158,60,.4); }
+    .btn-stop  { border-color: #5a1e1e; color: #9e3c3c; }
+    .btn-stop:hover  { border-color: #9e3c3c; color: #c45a5a; box-shadow: 0 0 10px rgba(158,60,60,.4); }
+    .btn-reset { border-color: var(--border); color: var(--gold-dim); }
+
+    /* ── Milestones panel ────────────────────────────────────── */
+    .milestone-item { margin-bottom: 14px; }
+
+    .milestone-btn {
+      width: 100%;
+      padding: 11px 10px;
+      font-size: clamp(.7rem, 1.1vw, .85rem);
+      text-align: center;
+      position: relative;
+    }
+    .milestone-btn.done {
+      border-color: var(--gold-dim);
+      background: linear-gradient(to bottom, #2a200e, #1c1608);
+      color: var(--gold-bright);
+    }
+    .milestone-btn.done::before {
+      content: '✓';
+      position: absolute;
+      left: 10px;
+      color: #5a9e3c;
+      font-size: .9em;
+    }
+
+    .milestone-time {
+      display: block;
+      text-align: center;
+      font-size: clamp(.7rem, 1vw, .82rem);
+      color: var(--gold);
+      margin-top: 5px;
+      letter-spacing: 2px;
+    }
+    .milestone-split {
+      display: block;
+      text-align: center;
+      font-size: clamp(.6rem, .9vw, .72rem);
+      color: var(--dim);
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .milestones-footer {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-size: .7rem;
+      color: var(--dim);
+      text-align: center;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+
+    /* ── Items panel ─────────────────────────────────────────── */
+    .item-input-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+    .item-input-row input {
+      flex: 1;
+      font-family: 'Cinzel', serif;
+      font-size: clamp(.7rem, 1vw, .82rem);
+      background: #0d0b07;
+      border: 1px solid var(--border-bright);
+      color: var(--gold);
+      padding: 8px 10px;
+      border-radius: 2px;
+      outline: none;
+      user-select: text;
+    }
+    .item-input-row input::placeholder { color: var(--dim); }
+    .item-input-row input:focus {
+      border-color: var(--gold-dim);
+      box-shadow: 0 0 6px rgba(200,170,110,.2);
+    }
+
+    .btn-unique { border-color: #883300; color: var(--unique); }
+    .btn-unique:hover { border-color: var(--unique); color: #ff8833; box-shadow: 0 0 8px rgba(255,102,0,.4); }
+    .btn-set    { border-color: #005500; color: var(--set); }
+    .btn-set:hover    { border-color: var(--set); color: #22cc22; box-shadow: 0 0 8px rgba(0,170,0,.4); }
+
+    .items-list {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+    }
+    .items-list::-webkit-scrollbar { width: 4px; }
+    .items-list::-webkit-scrollbar-track { background: #0a0804; }
+    .items-list::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+    .item-empty {
+      color: var(--dim);
+      text-align: center;
+      padding: 24px 10px;
+      font-size: .8rem;
+      letter-spacing: 1px;
+    }
+
+    .item-entry {
+      display: flex;
+      align-items: center;
+      padding: 5px 4px;
+      border-bottom: 1px solid #1c1810;
+      gap: 8px;
+      font-size: clamp(.7rem, 1vw, .82rem);
+    }
+    .item-entry:hover { background: #1a1208; }
+
+    .item-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .item-dot.unique { background: var(--unique); box-shadow: 0 0 5px var(--unique); }
+    .item-dot.set    { background: var(--set);    box-shadow: 0 0 5px var(--set); }
+
+    .item-name       { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .item-name.unique { color: var(--unique); }
+    .item-name.set    { color: var(--set); }
+
+    .item-time { font-size: .68rem; color: var(--dim); flex-shrink: 0; }
+
+    .item-remove {
+      border: none;
+      background: none;
+      color: #440000;
+      font-size: .75rem;
+      padding: 2px 4px;
+      opacity: 0;
+      flex-shrink: 0;
+    }
+    .item-entry:hover .item-remove { opacity: 1; }
+    .item-remove:hover { color: var(--red); background: none; box-shadow: none; }
+
+    .items-count {
+      flex-shrink: 0;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 14px;
+      font-size: clamp(.65rem, .9vw, .76rem);
+      color: var(--gold-dim);
+    }
+    .items-count .c-unique { color: #cc5500; }
+    .items-count .c-set    { color: #007700; }
+
+    .kbd-hint {
+      flex-shrink: 0;
+      margin-top: 4px;
+      font-size: .65rem;
+      color: var(--dim);
+      letter-spacing: .5px;
+    }
+    .kbd-hint kbd {
+      background: #1c1810;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 1px 4px;
+      font-family: monospace;
+      color: var(--gold-dim);
+      font-size: .65rem;
+    }
+
+    /* ── Confirm overlay ─────────────────────────────────────── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.88);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .overlay.active { display: flex; }
+
+    .confirm-box {
+      background: #1a1208;
+      border: 2px solid var(--border-bright);
+      border-radius: 4px;
+      padding: 36px 48px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(0,0,0,.8);
+    }
+    .confirm-box h3 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.3rem;
+      color: var(--red);
+      margin-bottom: 14px;
+      letter-spacing: 2px;
+    }
+    .confirm-box p {
+      font-size: .9rem;
+      color: var(--gold-dim);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+    .confirm-btns { display: flex; gap: 16px; justify-content: center; }
+
+    /* ── Responsive (tablet / small screen) ──────────────────── */
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+        height: auto;
+      }
+      .timer-panel { grid-column: 1 / -1; }
+      body { overflow: auto; height: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>☩ Diablo II: Resurrected ☩</h1>
+  <p>Ladder Season 13 &nbsp;·&nbsp; LAN Party Run</p>
+</header>
+
+<div class="grid">
+
+  <!-- ── MILESTONES ─────────────────────────────── -->
+  <section class="panel" id="milestones-panel">
+    <div class="panel-title">Milestones</div>
+
+    <div class="milestone-item">
+      <button class="milestone-btn" id="btn-normal"
+              onclick="toggleMilestone('normal')">⚔ Normal</button>
+      <span class="milestone-time"  id="time-normal">—</span>
+      <span class="milestone-split" id="split-normal"></span>
+    </div>
+
+    <div class="milestone-item">
+      <button class="milestone-btn" id="btn-nightmare"
+              onclick="toggleMilestone('nightmare')">⚔ Nightmare</button>
+      <span class="milestone-time"  id="time-nightmare">—</span>
+      <span class="milestone-split" id="split-nightmare"></span>
+    </div>
+
+    <div class="milestone-item">
+      <button class="milestone-btn" id="btn-hell"
+              onclick="toggleMilestone('hell')">⚔ Hell</button>
+      <span class="milestone-time"  id="time-hell">—</span>
+      <span class="milestone-split" id="split-hell"></span>
+    </div>
+
+    <div class="milestones-footer">
+      Click again to undo milestone
+    </div>
+  </section>
+
+  <!-- ── TIMER ──────────────────────────────────── -->
+  <section class="panel timer-panel">
+    <div class="timer-status stopped" id="timer-status">■ STOPPED</div>
+    <div class="timer-display" id="timer-display">00:00:00</div>
+    <div class="timer-controls">
+      <button class="btn-start" onclick="startTimer()">▶ Start</button>
+      <button class="btn-stop"  onclick="stopTimer()">■ Stop</button>
+      <button class="btn-reset" onclick="showReset()">↺ Reset</button>
+    </div>
+  </section>
+
+  <!-- ── ITEMS ──────────────────────────────────── -->
+  <section class="panel">
+    <div class="panel-title">Items Found</div>
+
+    <div class="item-input-row">
+      <input id="item-input" type="text" placeholder="Item name…"
+             onkeydown="itemKeydown(event)" autocomplete="off" spellcheck="false" />
+      <button class="btn-unique" onclick="addItem('unique')" title="Add as Unique (Enter)">Unique</button>
+      <button class="btn-set"    onclick="addItem('set')"    title="Add as Set (Shift+Enter)">Set</button>
+    </div>
+
+    <div class="items-list" id="items-list">
+      <div class="item-empty">No items found yet…</div>
+    </div>
+
+    <div class="items-count">
+      <span>Total: <strong id="cnt-total">0</strong></span>
+      <span class="c-unique">Unique: <strong id="cnt-unique">0</strong></span>
+      <span class="c-set">Set: <strong id="cnt-set">0</strong></span>
+    </div>
+
+    <div class="kbd-hint">
+      <kbd>Enter</kbd> = Unique &nbsp;&nbsp;
+      <kbd>Shift+Enter</kbd> = Set &nbsp;&nbsp;
+      <kbd>Space</kbd> = Start/Stop timer
+    </div>
+  </section>
+
+</div>
+
+<!-- ── CONFIRM OVERLAY (shared) ───────────────────────── -->
+<div class="overlay" id="overlay">
+  <div class="confirm-box">
+    <h3 id="overlay-title">⚠ Reset All Data?</h3>
+    <p id="overlay-body">This will clear the timer, all milestones,<br/>and the entire items list.</p>
+    <div class="confirm-btns">
+      <button class="btn-stop" id="overlay-confirm">Yes, Reset</button>
+      <button onclick="hideOverlay()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+// ── Constants ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'd2r_lan_v1';
+const MILESTONES  = ['normal', 'nightmare', 'hell'];
+const TICK_MS     = 500;
+
+// ── State ────────────────────────────────────────────────────────────────────
+let state = {
+  startTime:  null,   // epoch ms when last started
+  elapsedMs:  0,      // accumulated ms (when paused)
+  isRunning:  false,
+  milestones: { normal: null, nightmare: null, hell: null },
+  items:      []      // [{ name, type, timestamp }]
+};
+
+// ── Persistence ──────────────────────────────────────────────────────────────
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+  } catch (_) {}
+}
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
+}
+
+// ── Timer helpers ─────────────────────────────────────────────────────────────
+function nowElapsed() {
+  return state.isRunning
+    ? state.elapsedMs + (Date.now() - state.startTime)
+    : state.elapsedMs;
+}
+
+function fmt(ms) {
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  return `${pad(h)}:${pad(m)}:${pad(sec)}`;
+}
+function pad(n) { return String(n).padStart(2, '0'); }
+
+// ── Timer actions ─────────────────────────────────────────────────────────────
+let _tick = null;
+
+function startTimer() {
+  if (state.isRunning) return;
+  state.startTime = Date.now();
+  state.isRunning = true;
+  _tick = setInterval(renderTimer, TICK_MS);
+  save();
+  renderTimer();
+  renderStatus();
+}
+
+function stopTimer() {
+  if (!state.isRunning) return;
+  state.elapsedMs = nowElapsed();
+  state.startTime = null;
+  state.isRunning = false;
+  clearInterval(_tick);
+  _tick = null;
+  save();
+  renderTimer();
+  renderStatus();
+}
+
+// ── Overlay (shared confirm dialog) ───────────────────────────────────────────
+function showOverlay(title, body, action) {
+  document.getElementById('overlay-title').textContent   = title;
+  document.getElementById('overlay-body').innerHTML      = body;
+  document.getElementById('overlay-confirm').onclick     = () => { hideOverlay(); action(); };
+  document.getElementById('overlay').classList.add('active');
+}
+function hideOverlay() {
+  document.getElementById('overlay').classList.remove('active');
+}
+
+function showReset() {
+  showOverlay(
+    '⚠ Reset All Data?',
+    'This will clear the timer, all milestones,<br/>and the entire items list.',
+    confirmReset
+  );
+}
+function confirmReset() {
+  clearInterval(_tick); _tick = null;
+  state = {
+    startTime: null, elapsedMs: 0, isRunning: false,
+    milestones: { normal: null, nightmare: null, hell: null },
+    items: []
+  };
+  save();
+  renderAll();
+}
+
+// ── Milestone actions ─────────────────────────────────────────────────────────
+function toggleMilestone(name) {
+  if (state.milestones[name] !== null) {
+    const label = name[0].toUpperCase() + name.slice(1);
+    showOverlay(
+      `Undo ${label}?`,
+      `Clear the <strong>${label}</strong> milestone time?`,
+      () => {
+        state.milestones[name] = null;
+        save();
+        renderMilestones();
+      }
+    );
+    return;
+  }
+  state.milestones[name] = nowElapsed();
+  save();
+  renderMilestones();
+}
+
+// ── Item actions ──────────────────────────────────────────────────────────────
+let lastType = 'unique';
+
+function itemKeydown(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    addItem(e.shiftKey ? 'set' : 'unique');
+  }
+}
+
+function addItem(type) {
+  lastType = type;
+  const inp = document.getElementById('item-input');
+  const name = inp.value.trim();
+  if (!name) { inp.focus(); return; }
+  state.items.unshift({ name, type, timestamp: nowElapsed() });
+  inp.value = '';
+  inp.focus();
+  save();
+  renderItems();
+}
+
+function removeItem(idx) {
+  state.items.splice(idx, 1);
+  save();
+  renderItems();
+}
+
+// ── Render helpers ────────────────────────────────────────────────────────────
+function renderTimer() {
+  document.getElementById('timer-display').textContent = fmt(nowElapsed());
+}
+
+function renderStatus() {
+  const el = document.getElementById('timer-status');
+  const disp = document.getElementById('timer-display');
+  if (state.isRunning) {
+    el.textContent = '● RUNNING';
+    el.className = 'timer-status running';
+    disp.classList.add('running');
+  } else {
+    el.textContent = '■ STOPPED';
+    el.className = 'timer-status stopped';
+    disp.classList.remove('running');
+  }
+}
+
+function renderMilestones() {
+  let prev = 0;
+  MILESTONES.forEach(name => {
+    const btn   = document.getElementById(`btn-${name}`);
+    const timeEl  = document.getElementById(`time-${name}`);
+    const splitEl = document.getElementById(`split-${name}`);
+    const ms = state.milestones[name];
+    if (ms !== null) {
+      btn.classList.add('done');
+      timeEl.textContent = fmt(ms);
+      splitEl.textContent = prev > 0 ? `+${fmt(ms - prev)}` : '';
+      prev = ms;
+    } else {
+      btn.classList.remove('done');
+      timeEl.textContent = '—';
+      splitEl.textContent = '';
+    }
+  });
+}
+
+function esc(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderItems() {
+  const list = document.getElementById('items-list');
+  if (state.items.length === 0) {
+    list.innerHTML = '<div class="item-empty">No items found yet…</div>';
+  } else {
+    list.innerHTML = state.items.map((it, i) => `
+      <div class="item-entry">
+        <span class="item-dot ${it.type}"></span>
+        <span class="item-name ${it.type}" title="${esc(it.name)}">${esc(it.name)}</span>
+        <span class="item-time">${fmt(it.timestamp)}</span>
+        <button class="item-remove" onclick="removeItem(${i})" title="Remove">✕</button>
+      </div>`).join('');
+  }
+  const u = state.items.filter(x => x.type === 'unique').length;
+  const s = state.items.filter(x => x.type === 'set').length;
+  document.getElementById('cnt-total').textContent  = state.items.length;
+  document.getElementById('cnt-unique').textContent = u;
+  document.getElementById('cnt-set').textContent    = s;
+}
+
+function renderAll() {
+  renderTimer();
+  renderStatus();
+  renderMilestones();
+  renderItems();
+}
+
+// ── Keyboard shortcuts ────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === ' ') {
+    e.preventDefault();
+    state.isRunning ? stopTimer() : startTimer();
+  }
+  if (e.key === 'Escape') hideOverlay();
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+load();
+renderAll();
+if (state.isRunning) {
+  // Resume tick if was running when page reloaded
+  _tick = setInterval(renderTimer, TICK_MS);
+}
+</script>
+</body>
+</html>
